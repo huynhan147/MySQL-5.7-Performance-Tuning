@@ -19,7 +19,8 @@ Trong MySQL 5.7, chỉ có bốn biến thực sự quan trọng cần được 
 
 ```[mysqld]
  # other variables here
-  innodb_buffer_pool_size = 1G # (adjust value here, 50%-70% of total RAM) innodb_log_file_size = 256M 
+  innodb_buffer_pool_size = 1G # (adjust value here, 50%-70% of total RAM) 
+  innodb_log_file_size = 256M 
   innodb_flush_log_at_trx_commit = 1 # may change to 2 or 0 innodb_flush_method = O_DIRECT
 ```
 
