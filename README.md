@@ -2,9 +2,9 @@
 
 # Chỉnh sửa hiệu suất MySQL 5.7 ngay lập tức sau khi cài đặt
 
-Blog này cập nhật [ blog của Stephane Combaudon về điều chỉnh hiệu suất MySQL ] và bao gồm điều chỉnh hiệu suất MySQL 5.7 ngay lập tức sau khi cài đặt.
+Blog này cập nhật [ blog của Stephane Combaudon về điều chỉnh hiệu suất MySQL ][1] và bao gồm điều chỉnh hiệu suất MySQL 5.7 ngay lập tức sau khi cài đặt.
 
-Một vài năm trước, Stephane Combaudon đã viết một bài đăng trên blog về [ 10 cài đặt điều chỉnh hiệu năng MySQL sau khi cài đặt ] bao gồm các phiên bản cũ hơn (hiện tại) của MySQL: 5.1, 5.5 và 5.6. Trong bài này, tôi sẽ xem xét những gì để điều chỉnh trong MySQL 5.7 (tập trung vào InnoDB).
+Một vài năm trước, Stephane Combaudon đã viết một bài đăng trên blog về [ 10 cài đặt điều chỉnh hiệu năng MySQL sau khi cài đặt ][1] bao gồm các phiên bản cũ hơn (hiện tại) của MySQL: 5.1, 5.5 và 5.6. Trong bài này, tôi sẽ xem xét những gì để điều chỉnh trong MySQL 5.7 (tập trung vào InnoDB).
 
 Tin tốt là MySQL 5.7 có giá trị mặc định tốt hơn đáng kể. Morgan Tocker đã tạo một [trang có danh sách đầy đủ các tính năng trong MySQL 5.7] [2], và là một điểm tham khảo tuyệt vời. Ví dụ: các biến sau được đặt _mặc định_:
 
@@ -19,7 +19,8 @@ Trong MySQL 5.7, chỉ có bốn biến thực sự quan trọng cần được 
 
 ```[mysqld]
  # other variables here
-  innodb_buffer_pool_size = 1G # (adjust value here, 50%-70% of total RAM) innodb_log_file_size = 256M 
+  innodb_buffer_pool_size = 1G # (adjust value here, 50%-70% of total RAM) 
+  innodb_log_file_size = 256M 
   innodb_flush_log_at_trx_commit = 1 # may change to 2 or 0 innodb_flush_method = O_DIRECT
 ```
 
