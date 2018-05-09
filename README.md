@@ -1,12 +1,12 @@
 [Source](https://www.percona.com/blog/2016/10/12/mysql-5-7-performance-tuning-immediately-after-installation/ "Permalink to MySQL 5.7 Performance Tuning Immediately After Installation")
 
-# Chỉnh sửa hiệu suất MySQL 5.7 ngay lập tức sau khi cài đặt
+# Điều chỉnh hiệu năng MySQL 5.7 ngay lập tức sau khi cài đặt
 
-Blog này cập nhật [blog của Stephane Combaudon về điều chỉnh hiệu suất MySQL](https://www.percona.com/blog/2014/01/28/10-mysql-performance-tuning-settings-after-installation/) và bao gồm điều chỉnh hiệu suất MySQL 5.7 ngay lập tức sau khi cài đặt.
+Blog này cập nhật [blog của Stephane Combaudon về điều chỉnh hiệu năng MySQL](https://www.percona.com/blog/2014/01/28/10-mysql-performance-tuning-settings-after-installation/) và bao gồm điều chỉnh hiệu năng MySQL 5.7 ngay lập tức sau khi cài đặt.
 
 Một vài năm trước, Stephane Combaudon đã viết một bài đăng trên blog về [10 cài đặt điều chỉnh hiệu năng MySQL sau khi cài đặt](https://www.percona.com/blog/2014/01/28/10-mysql-performance-tuning-settings-after-installation/) bao gồm các phiên bản cũ hơn (hiện tại) của MySQL: 5.1, 5.5 và 5.6. Trong bài này, tôi sẽ xem xét những gì để điều chỉnh trong MySQL 5.7 (tập trung vào InnoDB).
 
-Tin tốt là MySQL 5.7 có giá trị mặc định tốt hơn đáng kể. Morgan Tocker đã tạo một [trang có danh sách đầy đủ các tính năng trong MySQL 5.7] (http://www.thecompletelistoffeatures.com/), và là một điểm tham khảo tuyệt vời. Ví dụ: các biến sau được đặt _mặc định_:
+Tin tốt là MySQL 5.7 có giá trị mặc định tốt hơn đáng kể. Morgan Tocker đã tạo một [trang có danh sách đầy đủ các tính năng trong MySQL 5.7] (http://www.thecompletelistoffeatures.com/), và là một nơi tham khảo tuyệt vời. Ví dụ: các biến sau được đặt _mặc định_:
 
 - innodb_file_per_table=ON
 - innodb_stats_on_metadata = OFF
@@ -36,12 +36,12 @@ Mô tả :
 | innodb_buffer_pool_size |  Bắt đầu với 50% 70% tổng RAM. Không nhất thiết phải lớn hơn kích thước cơ sở dữ liệu|  
 | innodb_flush_log_at_trx_commit | * 1   (Mặc định) * 0/2 hiệu suất cao hơn,kém tin cậy hơn)|  
 | innodb_log_file_size |  128M – 2G (không cần thiết phải lớn hơn vùng đệm) |  
-| innodb_flush_method |  O_DIRECT (tránh buffering 2 lần) | 
+| innodb_flush_method |  O_DIRECT (tránh bộ đêm 2 lần) | 
  
 
 _**Tiếp theo là gì?**_
 
-Đó là một điểm khởi đầu tốt cho bất kỳ cài đặt mới nào. Có một số biến khác có thể tăng hiệu năng MySQL cho một số tải công việc. Thông thường, tôi sẽ thiết lập một công cụ theo dõi / vẽ đồ thị MySQL (ví dụ, [nền tảng giám sát và quản lý Percona] (http://pmmdemo.percona.com/)) và sau đó kiểm tra bảng điều khiển MySQL để thực hiện điều chỉnh thêm.
+Đó là một điểm khởi đầu tốt cho bất kỳ cài đặt mới nào. Có một số biến khác có thể tăng hiệu năng MySQL cho một lượng công việc. Thông thường, tôi sẽ thiết lập một công cụ theo dõi / vẽ đồ thị MySQL (ví dụ, [nền tảng giám sát và quản lý Percona] (http://pmmdemo.percona.com/)) và sau đó kiểm tra bảng điều khiển MySQL để thực hiện điều chỉnh thêm.
 
 _**Những gì chúng ta có thể điều chỉnh thêm dựa trên các đồ thị?**_
 
@@ -52,7 +52,7 @@ _Kích thước vùng đệm của InnoDB_. Xem đồ thị sau:
 ![MySQL 5.7 Performance Tuning](https://www.percona.com/blog/wp-content/uploads/2016/10/Screen-Shot-2016-10-03-at-12.48.13-PM.png)
  
 
-Như chúng ta có thể thấy, chúng ta có thể có lợi từ việc tăng kích thước vùng đệm InnoDB một chút lên ~ 10G, vì chúng ta có RAM và số trang free nhỏ so với tổng số vùng đệm.
+Như chúng ta có thể thấy, chúng ta có thể có lợi từ việc tăng kích thước vùng đệm InnoDB một chút lên ~ 10G, vì chúng ta có RAM và số trang trống nhỏ so với tổng số vùng đệm.
 
 _Kích thước file log InnoDB._ Xem đồ thị sau:
 
@@ -70,18 +70,18 @@ Thiết lập [innodb_autoinc_lock_mode](https://dev.mysql.com/doc/refman/5.7/en
 
 _innodb_io_capacity _and_ innodb_io_capacity_max_
 
-Đây là một điều chỉnh nâng cao hơn, và chỉ có ý nghĩa khi bạn đang thực hiện việc viết quá nhiều (nó không áp dụng cho lần đọc, tức là SELECT). Nếu bạn thực sự cần phải điều chỉnh nó, phương pháp tốt nhất là biết bao nhiêu IOPS hệ thống có thể thực hiện. Ví dụ, nếu máy chủ có một ổ SSD, chúng ta có thể thiết lập innodb_io_capacity_max = 6000 và innodb_io_capacity = 3000 (50% tối đa). Đó là một ý tưởng tốt để chạy sysbench hoặc bất kỳ công cụ benchmark khác nào để chuẩn hóa thông lượng đĩa.
+Đây là một điều chỉnh nâng cao hơn, và chỉ có ý nghĩa khi bạn đang thực hiện việc ghi quá nhiều (nó không áp dụng cho lần đọc, tức là SELECT). Nếu bạn thực sự cần phải điều chỉnh nó, phương pháp tốt nhất là biết bao nhiêu IOPS hệ thống có thể thực hiện. Ví dụ, nếu máy chủ có một ổ SSD, chúng ta có thể thiết lập innodb_io_capacity_max = 6000 và innodb_io_capacity = 3000 (50% tối đa). Đó là một ý tưởng tốt để chạy sysbench hoặc bất kỳ công cụ benchmark khác nào để chuẩn hóa thông qua ổ đĩa.
 
 
 Nhưng chúng ta có cần phải lo lắng về cài đặt này không? Xem biểu đồ về "[trang bẩn] ((http://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_dirty_page))" của vùng đệm :
 
 ![screen-shot-2016-10-03-at-7-19-47-pm](https://www.percona.com/blog/wp-content/uploads/2016/10/Screen-Shot-2016-10-03-at-7.19.47-PM.png)
 
-Trong trường hợp này, tổng số trang bẩn là cao, và có vẻ như InnoDB không thể theo kịp với flush chúng. Nếu chúng tôi có hệ thống phụ đĩa nhanh (nghĩa là SSD), chúng tôi có thể hưởng lợi từ việc tăng innodb_io_capacity và innodb_io_capacity_max.
+Trong trường hợp này, tổng số trang bẩn là cao, và có vẻ như InnoDB không thể theo kịp với flush chúng. Nếu chúng tôi có hệ thống ổ đĩa phụ nhanh (nghĩa là SSD), chúng tôi có thể hưởng lợi từ việc tăng innodb_io_capacity và innodb_io_capacity_max.
 
 _**Kết luận hoặc TL; DR phiên bản**_
 
-Các mặc định mới của MySQL 5.7 tốt hơn nhiều cho những khối lượng công việc với mục đích chung. Đồng thời, chúng ta vẫn cần cấu hình biến InnoDB để tận dụng số lượng RAM trên hộp. Sau khi cài đặt, hãy làm theo các bước sau:
+Các mặc định mới của MySQL 5.7 tốt hơn nhiều cho những khối lượng công việc với mục đích chung. Đồng thời, chúng ta vẫn cần cấu hình biến InnoDB để tận dụng số lượng RAM trên máy. Sau khi cài đặt, hãy làm theo các bước sau:
 
 1. Thêm biến InnoDB vào my.cnf (như mô tả ở trên) và khởi động lại MySQL
 2. Cài đặt hệ thống giám sát, (ví dụ: nền tảng giám sát và quản lý Percona)
