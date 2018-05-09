@@ -70,7 +70,7 @@ Thiết lập [innodb_autoinc_lock_mode](https://dev.mysql.com/doc/refman/5.7/en
 
 _innodb_io_capacity _and_ innodb_io_capacity_max_
 
-Đây là một điều chỉnh nâng cao hơn, và chỉ có ý nghĩa khi bạn đang thực hiện việc viết quá nhiều (nó không áp dụng cho các việc đọc, tức là SELECT). Nếu bạn thực sự cần phải điều chỉnh nó, phương pháp tốt nhất là biết bao nhiêu IOPS hệ thống có thể thực hiện. Ví dụ, nếu máy chủ có một ổ SSD, chúng ta có thể thiết lập innodb_io_capacity_max = 6000 và innodb_io_capacity = 3000 (50% tối đa). Đó là một ý tưởng tốt để chạy sysbench hoặc bất kỳ công cụ benchmark khác nào để tính điểm cho thông lượng đĩa.
+Đây là một điều chỉnh nâng cao hơn, và chỉ có ý nghĩa khi bạn đang thực hiện việc viết quá nhiều (nó không áp dụng cho các việc đọc, tức là SELECT). Nếu bạn thực sự cần phải điều chỉnh nó, phương pháp tốt nhất là biết bao nhiêu IOPS hệ thống có thể thực hiện. Ví dụ, nếu máy chủ có một ổ SSD, chúng ta có thể thiết lập innodb_io_capacity_max = 6000 và innodb_io_capacity = 3000 (50% tối đa). Đó là một ý tưởng tốt để chạy sysbench hoặc bất kỳ công cụ benchmark khác nào để đánh giá thông lượng đĩa.
 
 
 Nhưng chúng ta có cần phải lo lắng về cài đặt này không? Xem biểu đồ về "[trang bẩn] ((http://dev.mysql.com/doc/refman/5.7/en/glossary.html#glos_dirty_page))" của vùng đệm :
